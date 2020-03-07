@@ -2,6 +2,14 @@ import java.util.*;
 
 class SolutionString {
 
+    /**
+     * Reverse words in a given
+     * string(https://www.geeksforgeeks.org/reverse-words-in-a-given-string/).
+     * 
+     * Approach: First reverse the whole string then reverse the words one by one
+     * 
+     * @param arr
+     */
     public void reverseWords(char[] arr) {
 
         int i = 0;
@@ -55,12 +63,17 @@ class SolutionString {
     }
 
     /**
-     * Find the longest palindrome in the string
+     * Find the longest palindrome in the
+     * string(https://www.geeksforgeeks.org/longest-palindrome-substring-set-1/).
      * 
      * Approach: the longest palindrome in the string[left..right] is the following
      * 
-     * if left == right then 1, if right = left + 1, i.e only two characters and
-     * both are equal then 2 if left == right then 2 + num(str[left+1..right-1])
+     * if left == right then 1,
+     * 
+     * if right = left + 1, i.e only two characters and both are equal then 2
+     * 
+     * if left == right then 2 + num(str[left+1..right-1])
+     * 
      * else max(num(str[left+1, right]), num(str[left..right-1]))
      * 
      * @param arr
@@ -82,14 +95,17 @@ class SolutionString {
     }
 
     /**
-     * Find the minimum number of insertions to form a palindrom
+     * Find the minimum number of insertions to form a
+     * palindrom(https://www.geeksforgeeks.org/minimum-insertions-to-form-a-palindrome-dp-28/).
      * 
      * Approach:
      * 
      * For str[left..right], the min number of insertions is
      * 
-     * If str[left] = str[right] then minInsertion(str[left+1, right-1]), Else
-     * min(minInsertions(str[left+1, right]), minInsertions(str[left, right-1]))+1
+     * If str[left] = str[right] then minInsertion(str[left+1, right-1]),
+     * 
+     * Else min(minInsertions(str[left+1, right]), minInsertions(str[left,
+     * right-1]))+1
      * 
      * @param str
      * @param left
@@ -115,11 +131,12 @@ class SolutionString {
     }
 
     /**
-     * Remove ajacent duplicates from the string
+     * Remove ajacent duplicates from the
+     * string(https://www.geeksforgeeks.org/recursively-remove-adjacent-duplicates-given-string/).
      * 
-     * Approach: put the first character in a stack and make it last seen also,
-     * start iterating from the second If the current character is the last seen do
-     * nothing If the current character is in the stack, pop and it make last seen
+     * Approach: put the first character in a stack and make it last seen also.
+     * Start iterating from the second. If the current character is the last seen do
+     * nothing. If the current character is in the stack, pop and it make last seen
      * Else push the character in the stack
      * 
      * @param r
@@ -147,6 +164,32 @@ class SolutionString {
         System.out.println(st.toString());
     }
 
+    /**
+     * Check if a string can be obtained by rotating another string 2
+     * places(https://www.geeksforgeeks.org/check-string-can-obtained-rotating-another-string-2-places/)
+     * 
+     * @param str1
+     * @param str2
+     * @return
+     */
+    public boolean isRotated(String str1, String str2) {
+        if (str1.length() != str2.length())
+            return false;
+
+        String clock_rot = "";
+        String anticlock_rot = "";
+        int len = str2.length();
+
+        // Initialize string as anti-clockwise rotation
+        anticlock_rot = anticlock_rot + str2.substring(len - 2, len) + str2.substring(0, len - 2);
+
+        // Initialize string as clock wise rotation
+        clock_rot = clock_rot + str2.substring(2) + str2.substring(0, 2);
+
+        // check if any of them is equal to string1
+        return (str1.equals(clock_rot) || str1.equals(anticlock_rot));
+    }
+
     private int value(char r) {
         if (r == 'I')
             return 1;
@@ -166,7 +209,8 @@ class SolutionString {
     }
 
     /**
-     * COnvert a string in roman numeric form into decimal
+     * Convert a string in roman numeric form into
+     * decimal(https://practice.geeksforgeeks.org/problems/roman-number-to-integer/0)
      * 
      * Approach: Keep adding the value of the character at ith position If the next
      * character is higher in value add higher - current val instead
@@ -195,7 +239,114 @@ class SolutionString {
     }
 
     /**
-     * Write your owb atoi
+     * Check whether two strings are anagram of each
+     * other(https://www.geeksforgeeks.org/check-whether-two-strings-are-anagram-of-each-other/).
+     * 
+     * Approach: Create count arrays of size 256 for both strings. Initialize all
+     * values in count arrays as 0. Iterate through every character of both strings
+     * and increment the count of character in the corresponding count arrays.
+     * Compare count arrays. If both count arrays are same, then return true.
+     * 
+     * @param str1
+     * @param str2
+     * @return
+     */
+    public boolean isAnagram(char[] str1, char[] str2) {
+        // Get lenghts of both strings
+        int n1 = str1.length;
+        int n2 = str2.length;
+
+        // If length of both strings is not same,
+        // then they cannot be anagram
+        if (n1 != n2)
+            return false;
+
+        // Sort both strings
+        Arrays.sort(str1);
+        Arrays.sort(str2);
+
+        // Compare sorted strings
+        for (int i = 0; i < n1; i++)
+            if (str1[i] != str2[i])
+                return false;
+
+        return true;
+    }
+
+    /**
+     * Length of the longest substring without repeating
+     * characters(https://www.geeksforgeeks.org/length-of-the-longest-substring-without-repeating-characters/)
+     * 
+     * 
+     * @param str
+     * @return
+     */
+    int longestUniqueSubsttr(String str) {
+        int NO_OF_CHARS = 256;
+        int n = str.length();
+        int cur_len = 1; // length of current substring
+        int max_len = 1; // result
+        int prev_index; // previous index
+        int i;
+        int visited[] = new int[NO_OF_CHARS];
+
+        /*
+         * Initialize the visited array as -1, -1 is used to indicate that character has
+         * not been visited yet.
+         */
+        for (i = 0; i < NO_OF_CHARS; i++) {
+            visited[i] = -1;
+        }
+
+        /*
+         * Mark first character as visited by storing the index of first character in
+         * visited array.
+         */
+        visited[str.charAt(0)] = 0;
+
+        /*
+         * Start from the second character. First character is already processed
+         * (cur_len and max_len are initialized as 1, and visited[str[0]] is set
+         */
+        for (i = 1; i < n; i++) {
+            prev_index = visited[str.charAt(i)];
+
+            /*
+             * If the current character is not present in the already processed substring or
+             * it is not part of the current NRCS, then do cur_len++
+             */
+            if (prev_index == -1 || i - cur_len > prev_index)
+                cur_len++;
+
+            /*
+             * If the current character is present in currently considered NRCS, then update
+             * NRCS to start from the next character of the previous instance.
+             */
+            else {
+                /*
+                 * Also, when we are changing the NRCS, we should also check whether length of
+                 * the previous NRCS was greater than max_len or not.
+                 */
+                if (cur_len > max_len)
+                    max_len = cur_len;
+
+                cur_len = i - prev_index;
+            }
+
+            // update the index of current character
+            visited[str.charAt(i)] = i;
+        }
+
+        // Compare the length of last NRCS with max_len and
+        // update max_len if needed
+        if (cur_len > max_len)
+            max_len = cur_len;
+
+        return max_len;
+    }
+
+    /**
+     * Write your owb atoi(https://www.geeksforgeeks.org/write-your-own-atoi/).
      * 
      * Approach 1. Ignore the white characters 2. Check for negative sign 3. Check
      * for overflow 4. Check for non numeric characters
@@ -227,7 +378,8 @@ class SolutionString {
     }
 
     /**
-     * Longest common prefix of a list of strings
+     * Longest common prefix of a list of
+     * strings(https://www.geeksforgeeks.org/longest-common-prefix-using-trie/)
      * 
      * Approach: Create a trie and walk the trie till theere is birfurcation, i.e. 2
      * children
@@ -251,7 +403,6 @@ class SolutionString {
             } else {
                 prefix += p.ch;
                 p = p.firstChild();
-
             }
         }
 

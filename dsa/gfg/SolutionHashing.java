@@ -13,11 +13,12 @@ class SolutionHashing {
     }
 
     /**
-     * Sort the array based on the relative position of elements in the second array
+     * Sort the array based on the relative position of elements in the second
+     * array(https://www.geeksforgeeks.org/sort-array-according-order-defined-another-array/)
      * 
-     * Approach: Keep the key, count of elements in A1 in a Hashmap Iterate on A2
+     * Approach: Keep the key, count of elements in A1 in a Hashmap. Iterate on A2
      * and, if the element in found in the map, put those many in the output as the
-     * count
+     * count. Remove the element from the map.
      * 
      * Another approach is use a custom comparator
      * 
@@ -30,7 +31,7 @@ class SolutionHashing {
 
     /**
      * Sort the elements in the array by frequency, if the frequency is same them by
-     * value/index
+     * value/index(https://www.geeksforgeeks.org/sort-elements-by-frequency-set-5-using-java-map/)
      * 
      * Approach: Keep a map of element and its frequency. Use a `Comparator` while
      * running Collections.sort
@@ -61,13 +62,14 @@ class SolutionHashing {
     }
 
     /**
-     * Find the largest subarray with sum = 0
+     * Find the largest subarray with sum =
+     * 0(https://www.geeksforgeeks.org/find-the-largest-subarray-with-0-sum/)
      * 
      * Approach: Iterate over the array and keep track of sum from 0 to ith element
      * in a map<sum, index>
      * 
      * If a sum is found in the map, it means, from the previous index to this
-     * index, the sum of elements is zero. get this difference from prev to current
+     * index, the sum of elements is zero. Get this difference from prev to current
      * index
      * 
      * @param A

@@ -51,7 +51,7 @@ public class SolutionLL {
     /**
      * Rotate a list by k
      * 
-     * Approach: move to kth node, get the last node Point last node to head, point
+     * Approach: move to kth node, get the last node. Point last node to head, point
      * head to (k+1)th node and make the next of kth node as null
      */
     public void rotateList(LinkedL l, int k) {
@@ -61,7 +61,7 @@ public class SolutionLL {
     /**
      * Reverse in groups of k
      * 
-     * Approach: Take groups of k using count, the reverse Point manage the pointer
+     * Approach: Take groups of k using count, the reverse. Point manage the pointer
      * of head accordingly
      */
     public void reverseInKGroups(LinkedL l, int k) {
@@ -74,7 +74,7 @@ public class SolutionLL {
      * Approach: Find the difference of the node betweent the two lists
      * 
      * In the first list, move to the d the node. Then traverse both the list
-     * together untill an intersecting node is note found.
+     * together untill an intersecting node is not found.
      */
     public void intersectionYShapedLists(LinkedL l1, LinkedL l2) {
     }
@@ -82,8 +82,8 @@ public class SolutionLL {
     /**
      * Detect a loop in a loop
      * 
-     * Approach: Run slow and fast pointer, when they intersect, thet is the loop If
-     * not then not
+     * Approach: Run slow and fast pointer, when they intersect, that is the loop.
+     * If not then not
      */
     public void detectLoop(LinkedL ll) {
 
@@ -92,7 +92,7 @@ public class SolutionLL {
     /**
      * Detect and remove loop from linked list
      * 
-     * Approach: detect loop first using the previoous method. Count the number of
+     * Approach: detect loop first using the previous method. Count the number of
      * nodes in the loop say k. Start one pointer from the head and another at k.
      * Move both pointer at the same pace, they will meet at the beginning of the
      * loop. Get the node before this node and make its next as null
@@ -107,7 +107,7 @@ public class SolutionLL {
      * 
      * Approach: Take two pointers and initialize them to head. Move one n times
      * from head. Then move both pointers at the same speed. When the second pointer
-     * reaches the end The first will reach nth point from end
+     * reaches the end The first will reach nth point from end.
      * 
      * @param ll
      */
@@ -202,7 +202,7 @@ public class SolutionLL {
     /**
      * Delete a node without the head pointer
      * 
-     * Approach: Copt the data of the next pointer to the current pointer Make the
+     * Approach: Copy the data of the next pointer to the current pointer. Make the
      * next pointer point to the next of next pointer
      * 
      * @param n

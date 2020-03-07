@@ -16,6 +16,21 @@ public class SolutionSQ {
             return false;
     }
 
+    /**
+     * Check for balanced parentheses in an
+     * expression(https://www.geeksforgeeks.org/check-for-balanced-parentheses-in-an-expression/).
+     * 
+     * Approach: Declare a character stack S. Now traverse the expression string
+     * exp. If the current character is a starting bracket (‘(‘ or ‘{‘ or ‘[‘) then
+     * push it to stack. If the current character is a closing bracket (‘)’ or ‘}’
+     * or ‘]’) then pop from stack and if the popped character is the matching
+     * starting bracket then fine else parenthesis are not balanced. After complete
+     * traversal, if there is some starting bracket left in stack then “not
+     * balanced”
+     * 
+     * @param exp
+     * @return
+     */
     public boolean matchParens(String exp) {
 
         char[] arr = exp.toCharArray();
@@ -48,9 +63,10 @@ public class SolutionSQ {
     }
 
     /**
-     * Given an array, print the Next Greater Element (NGE) for every element.
+     * Given an array, print the Next Greater Element (NGE) for every
+     * element(https://www.geeksforgeeks.org/next-greater-element/).
      * 
-     * Aproach: create a stack, put the first element in the stack
+     * Aproach: Create a stack, put the first element in the stack
      * 
      * Iterate from 2nd to last item, if the element in the stack is less than the
      * current element, keep popping. Then put the current element in the stack.
@@ -96,9 +112,10 @@ public class SolutionSQ {
     }
 
     /**
-     * Implement stack using two queueu
+     * Implement stack using two
+     * queue(https://www.geeksforgeeks.org/queue-using-stacks/).
      * 
-     * Approach: make push costly by enqueuing two second queue first then deeuque
+     * Approach: Make push costly by enqueuing to second queue first then deeuque
      * everything from first queue and enqueue it to second queue. Then swap the
      * queue names. This is to ensure that the newly inserted item is at the front
      * of queue.
@@ -110,24 +127,26 @@ public class SolutionSQ {
     }
 
     /**
-     * Implement getmin operation on a stack in contant time
+     * Implement getMin operation on a stack in constant
+     * time(https://www.geeksforgeeks.org/design-a-stack-that-supports-getmin-in-o1-time-and-o1-extra-space/).
      * 
      * Approach: Keep another stack, while pushing if the current element is smaller
      * than the min, push to aux stack as well. While popping, if the popped element
-     * is the current min, pop from the aux stack too
+     * is the current min, pop from the aux stack too.
      */
     public void stackWithGetMin() {
 
     }
 
     /**
-     * Find the starting point of a circular tour of gas stattions
+     * Find the starting point of a circular tour of gas
+     * stattions(https://www.geeksforgeeks.org/find-a-tour-that-visits-all-stations/).
      * 
      * Approach: Keep track of surplus which petrol available and distance till next
-     * pump If surplus is positive, make that node potential start, else try next
-     * node and update deficit
+     * pump. If surplus is positive, make that node potential start, else try next
+     * node and update deficit.
      * 
-     * At the end of the loop if surplus - deficit >=0, then tour is possible
+     * At the end of the loop if `surplus - deficit >= 0`, then tour is possible
      * 
      * @param p
      * @param d
@@ -138,11 +157,12 @@ public class SolutionSQ {
         int deficit = 0;
         int start = -1;
         for (int i = 0; i < p.length; i++) {
-            if (p[i] - d[i] < 0) {
-                deficit += p[i] - d[i];
+            int diff = p[i] - d[i];
+            if (diff < 0) {
+                deficit += diff;
                 surplus = 0;
             } else {
-                surplus += p[i] - d[i];
+                surplus += diff;
                 start = i;
             }
         }
@@ -160,7 +180,7 @@ public class SolutionSQ {
      * contiguous subarray of size k.
      * 
      * Approach: Use sliding window to keep track of the max index and min index of
-     * the current window Drop useless elements outside of the window.
+     * the current window Drop. Useless elements outside of the window.
      * 
      * Or use a heap
      * 
@@ -229,15 +249,21 @@ class Stack {
 
 }
 
-class LRUCache<E extends Comparable<E>> {
+/**
+ * https://www.geeksforgeeks.org/lru-cache-implementation/
+ * 
+ * @param <K>
+ * @param <V>
+ */
+class LRUCache<K extends Comparable<K>, V extends Comparable<V>> {
 
-    Deque<E> deque;
-    Set<E> set;
+    Deque<K> deque;
+    Map<K, V> map;
     int capacity;
 
     public LRUCache(int capacity) {
         deque = new ArrayDeque<>(capacity);
-        set = new HashSet<>(capacity);
+        map = new HashMap<>(capacity);
         this.capacity = capacity;
     }
 
@@ -245,25 +271,58 @@ class LRUCache<E extends Comparable<E>> {
      * Keeps the elements added to the cache, the least resently used is always the
      * last
      * 
-     * @param element
+     * @param key
      * @return
      */
-    public E get(E element) {
+    public V get(K key) {
         // If the element is present, then move to front
-        if (set.contains(element)) {
-            deque.remove(element);
-            deque.addFirst(element);
+        if (map.contains(key)) {
+            deque.remove(key);
+            deque.addFirst(key);
+            return map.get(key);
+        } else {
+            return null;
+        }
+
+    }
+
+    /**
+     * Keeps the elements added to the cache, the least resently used is always the
+     * last
+     * 
+     * @param key
+     * @return
+     */
+    public void put(K key, V value) {
+        // If the element is present, then move to front
+        if (map.contains(key)) {
+            deque.remove(key);
+            deque.addFirst(key);
         } else {
             // If the element is not present and the capacity is full, remove the last
             // element
             if (deque.size() == capacity) {
                 deque.removeLast();
-                set.remove(element);
+                map.remove(key);
             }
+            deque.addFirst(key);
+            map.put(key, value);
         }
-        deque.add(element);
-        set.add(element);
-        return element;
+    }
+
+    /**
+     * Keeps the elements added to the cache, the least resently used is always the
+     * last
+     * 
+     * @param key
+     * @return
+     */
+    public void delete(K key) {
+        // If the element is present, then remove
+        if (map.contains(key)) {
+            deque.remove(key);
+            map.remove(key);
+        }
     }
 
 }
