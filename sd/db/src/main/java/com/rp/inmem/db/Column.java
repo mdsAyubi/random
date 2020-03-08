@@ -3,7 +3,6 @@ package com.rp.inmem.db;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Column {
     private String name;
@@ -17,8 +16,9 @@ public class Column {
         this.validators = validators;
     }
 
-    public List<Validation> isValid(Object value){
-        final List<Validation> validations = validators.stream().map(v -> v.validate(this, value)).collect(Collectors.toList());
+    public List<Validation> isValid(Object value) {
+        final List<Validation> validations = validators.stream().map(v -> v.validate(this, value))
+                .collect(Collectors.toList());
         return validations;
     }
 

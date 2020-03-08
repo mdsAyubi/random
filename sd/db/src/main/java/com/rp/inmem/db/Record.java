@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Record {
-    private Map<String, Object> map = new ConcurrentHashMap();
+    private Map<String, Object> map = new ConcurrentHashMap<>();
 
     public Record(Map<String, Object> map) {
         this.map = map;
@@ -17,8 +17,10 @@ public class Record {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Record record = (Record) o;
         return Objects.equals(map, record.map);
     }
@@ -30,8 +32,6 @@ public class Record {
 
     @Override
     public String toString() {
-        return "Record{" +
-                "map=" + map +
-                '}';
+        return "Record{" + "map=" + map + '}';
     }
 }
