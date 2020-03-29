@@ -4,13 +4,12 @@ package com.gazelle.lib;
  * Hello world!
  *
  */
-public class App 
-{
+public class App {
     int attempNumber = 0;
-    public static void main( String[] args )
-    {
 
-        System.out.println( "Hello World!" );
+    public static void main(String[] args) {
+
+        System.out.println("Hello World!");
         App app = new App();
         int result = 0;
 
@@ -22,7 +21,8 @@ public class App
 
         GExceptionPolicy defaultExceptionPolicy = new DefaultExceptionPolicy();
 
-        GRetry<Integer> integerGRetry = new GRetry<>(executionTimeBasedRetryPolicy, defaultFixedBackOffPolicy, defaultExceptionPolicy);
+        GRetry<Integer> integerGRetry = new GRetry<>(executionTimeBasedRetryPolicy, defaultFixedBackOffPolicy,
+                defaultExceptionPolicy);
 
         result = integerGRetry.tryOf(() -> app.aFunction(4));
 
@@ -30,10 +30,10 @@ public class App
     }
 
     public Integer aFunction(int succeedNum) {
-        if(attempNumber < succeedNum){
+        if (attempNumber < succeedNum) {
             attempNumber++;
-            System.out.println("Attempt Number "+ attempNumber);
-            throw new RuntimeException("Attempt Number "+ attempNumber);
+            System.out.println("Attempt Number " + attempNumber);
+            throw new RuntimeException("Attempt Number " + attempNumber);
         }
         return 1;
     }

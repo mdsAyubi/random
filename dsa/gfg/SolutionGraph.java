@@ -182,6 +182,9 @@ class IntGraph {
         stack.push(current);
     }
 
+    /**
+     * 
+     */
     public void connectedComponents() {
 
         var visited = new boolean[V];
