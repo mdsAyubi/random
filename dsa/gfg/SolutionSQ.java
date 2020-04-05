@@ -1,4 +1,3 @@
-import java.security.DrbgParameters.Capability;
 import java.util.*;
 
 public class SolutionSQ {
@@ -245,84 +244,6 @@ class Stack {
 
     public boolean isEmpty() {
         return top == -1;
-    }
-
-}
-
-/**
- * https://www.geeksforgeeks.org/lru-cache-implementation/
- * 
- * @param <K>
- * @param <V>
- */
-class LRUCache<K extends Comparable<K>, V extends Comparable<V>> {
-
-    Deque<K> deque;
-    Map<K, V> map;
-    int capacity;
-
-    public LRUCache(int capacity) {
-        deque = new ArrayDeque<>(capacity);
-        map = new HashMap<>(capacity);
-        this.capacity = capacity;
-    }
-
-    /**
-     * Keeps the elements added to the cache, the least resently used is always the
-     * last
-     * 
-     * @param key
-     * @return
-     */
-    public V get(K key) {
-        // If the element is present, then move to front
-        if (map.contains(key)) {
-            deque.remove(key);
-            deque.addFirst(key);
-            return map.get(key);
-        } else {
-            return null;
-        }
-
-    }
-
-    /**
-     * Keeps the elements added to the cache, the least resently used is always the
-     * last
-     * 
-     * @param key
-     * @return
-     */
-    public void put(K key, V value) {
-        // If the element is present, then move to front
-        if (map.contains(key)) {
-            deque.remove(key);
-            deque.addFirst(key);
-        } else {
-            // If the element is not present and the capacity is full, remove the last
-            // element
-            if (deque.size() == capacity) {
-                deque.removeLast();
-                map.remove(key);
-            }
-            deque.addFirst(key);
-            map.put(key, value);
-        }
-    }
-
-    /**
-     * Keeps the elements added to the cache, the least resently used is always the
-     * last
-     * 
-     * @param key
-     * @return
-     */
-    public void delete(K key) {
-        // If the element is present, then remove
-        if (map.contains(key)) {
-            deque.remove(key);
-            map.remove(key);
-        }
     }
 
 }

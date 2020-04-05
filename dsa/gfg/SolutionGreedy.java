@@ -17,10 +17,14 @@ class SolutionGreedy {
         // sg.maximumNumberOfToys(cost, K);
 
         // sg.maxDigitWithSumAsK(2, 9);
-        int arr[] = { 3, 16, 12, 9, 20 };
-        int k = 3;
+        // int arr[] = { 3, 16, 12, 9, 20 };
+        // int k = 3;
 
-        sg.minimizeHeightDifference(arr, k);
+        int capacity = 4;
+        int arr[] = { 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2 };
+
+        // sg.minimizeHeightDifference(arr, k);
+        sg.pageFaultsInLRU(arr, capacity);
 
     }
 
@@ -133,6 +137,40 @@ class SolutionGreedy {
     }
 
     /**
+     * Find the page faults in a LRU
+     * cache(https://www.geeksforgeeks.org/program-for-least-recently-used-lru-page-replacement-algorithm/)
+     * 
+     * Approach: Maintain an LRU cache.
+     * 
+     * While putting more elements after the capacity is run over, count the page
+     * faults
+     * 
+     * @param A
+     */
+    public void pageFaultsInLRU(int[] A, int capacity) {
+        var pageFault = 0;
+        LRUCache<Integer, Integer> cache = new LRUCache<>(capacity);
+
+        for (int i = 0; i < A.length; i++) {
+            var elem = A[i];
+            if (i < capacity) {
+                cache.put(elem, i);
+            } else {
+                if (cache.isPresent(elem)) {
+                    continue;
+                } else {
+                    if (cache.isFull()) {
+                        cache.remove();
+                    }
+                    pageFault++;
+                    cache.put(elem, i);
+                }
+            }
+        }
+        System.out.println(pageFault);
+    }
+
+    /**
      * Find the Largest number with given number of digits and sum of digits
      * 
      * Approach: Try to put the max digit possible at the most significant
@@ -212,12 +250,25 @@ class SolutionGreedy {
     /**
      * Minimize the sum of product of two arrays with permutations allowed
      * 
-     * Approach: sort the array and calculate the product of sum(A[i]*B[i])
+     * Approach: sort the array and calculate the product of sum(A[i]*B[n-i-1])
      * 
      * @param A
      * @param B
      */
     public void minProductSum(int[] A, int[] B) {
+        // Sort A and B so that minimum and maximum
+        // value can easily be fetched.
+        Arrays.sort(A);
+        Arrays.sort(B);
+        var n = A.length;
+
+        // Multiplying minimum value of A
+        // and maximum value of B
+        int result = 0;
+        for (var i = 0; i < n; i++)
+            result += (A[i] * B[n - i - 1]);
+
+        System.out.println(result);
 
     }
 
@@ -234,6 +285,18 @@ class SolutionGreedy {
      * @param k
      */
     public void minAmountToBuyAllCandies(int[] A, int k) {
+
+        var result = 0;
+        var n = A.length;
+        for (int i = 0; i < n; i++) {
+            // Buy current candy
+            result += A[i];
+
+            // And take k candies for free
+            // from the last
+            n = n - k;
+        }
+        System.out.println(result);
 
     }
 
@@ -263,5 +326,93 @@ class Pair<T1, T2> {
     @Override
     public String toString() {
         return "(" + first + "," + second + ")";
+    }
+}
+
+/**
+ * https://www.geeksforgeeks.org/lru-cache-implementation/
+ * 
+ * @param <K>
+ * @param <V>
+ */
+class LRUCache<K extends Comparable<K>, V extends Comparable<V>> {
+
+    Deque<K> deque;
+    Map<K, V> map;
+    int capacity;
+
+    public LRUCache(int capacity) {
+        deque = new ArrayDeque<>(capacity);
+        map = new HashMap<>(capacity);
+        this.capacity = capacity;
+    }
+
+    public boolean isPresent(K key) {
+        return map.containsKey(key);
+    }
+
+    public boolean isFull() {
+        return deque.size() == capacity;
+    }
+
+    public void remove() {
+        map.remove(deque.removeLast());
+    }
+
+    /**
+     * Keeps the elements added to the cache, the least resently used is always the
+     * last
+     * 
+     * @param key
+     * @return
+     */
+    public void put(K key, V value) {
+        // If the element is present, then move to front
+        if (map.containsKey(key)) {
+            deque.remove(key);
+            deque.addFirst(key);
+        } else {
+            // If the element is not present and the capacity is full, remove the last
+            // element
+            if (deque.size() == capacity) {
+                deque.removeLast();
+                map.remove(key);
+            }
+            deque.addFirst(key);
+            map.put(key, value);
+        }
+    }
+
+    /**
+     * Keeps the elements added to the cache, the least resently used is always the
+     * last
+     * 
+     * @param key
+     * @return
+     */
+    public V get(K key) {
+        // If the element is present, then move to front
+        if (map.containsKey(key)) {
+            deque.remove(key);
+            deque.addFirst(key);
+            return map.get(key);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Keeps the elements added to the cache, the least resently used is always the
+     * last
+     * 
+     * @param key
+     * @return
+     */
+    public void delete(K key) {
+        // If the element is present, then remove
+        if (map.containsKey(key)) {
+            deque.remove(key);
+            map.remove(key);
+        }
     }
 }
