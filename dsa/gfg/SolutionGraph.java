@@ -67,8 +67,94 @@ class SolutionGraph {
         Point source = new Point(0, 0);
         Point dest = new Point(3, 4);
 
-        ga.shortestPathInMaze(mat, source, dest);
+        // ga.shortestPathInMaze(mat, source, dest);
+        // s.connectStringsInCircles(List.of("aab", "abb"));
+        // s.alienDictionaryOrder(List.of("caa", "aaa", "aab"), 3);
 
+        int N = 30;
+        int moves[] = new int[N];
+        for (int i = 0; i < N; i++)
+            moves[i] = -1;
+
+        // Ladders
+        moves[2] = 21;
+        moves[4] = 7;
+        moves[10] = 25;
+        moves[19] = 28;
+
+        // Snakes
+        moves[26] = 0;
+        moves[20] = 8;
+        moves[16] = 3;
+        moves[18] = 6;
+
+        s.minDiceThrowsForSnakeAndLadder(moves, N);
+
+    }
+
+    public void connectStringsInCircles(List<String> strings) {
+        GraphAdjMatrix g = new GraphAdjMatrix(26);
+
+        for (String string : strings) {
+            var lower = string.toLowerCase();
+            g.addEdge(lower.charAt(0) - 'a', lower.charAt(lower.length() - 1) - 'a');
+        }
+
+        var isEulerian = g.isEulerian();
+        System.out.println(isEulerian);
+    }
+
+    public void alienDictionaryOrder(List<String> words, int alpha) {
+        GraphAdjMatrix g = new GraphAdjMatrix(alpha);
+
+        for (int i = 0; i < words.size() - 1; i++) {
+            var w1 = words.get(i);
+            var w2 = words.get(i + 1);
+
+            for (int j = 0; j < Math.min(w1.length(), w2.length()); j++) {
+                if (w1.charAt(j) != w2.charAt(j)) {
+                    g.addEdge(w1.charAt(j) - 'a', w2.charAt(j) - 'a');
+                    break; // stop the inner loop
+                }
+            }
+        }
+
+        java.util.Stack<Integer> stack = g.topoSort();
+        while (!stack.isEmpty()) {
+            System.out.println((char) ('a' + stack.pop()));
+        }
+    }
+
+    /**
+     * Find the minimum number of dice throws required to get to the end of the
+     * snake ladder board(https://www.geeksforgeeks.org/snake-ladder-problem-2/)
+     * 
+     * @param move
+     * @param n
+     */
+    public void minDiceThrowsForSnakeAndLadder(int[] move, int n) {
+        var visited = new boolean[n];
+        var queue = new ArrayDeque<SLNode>();
+
+        visited[0] = true;
+        queue.offer(new SLNode(0, 0));
+
+        while (!queue.isEmpty()) {
+            var node = queue.poll();
+
+            if (node.index == n - 1) {
+                System.out.println(node.distance);
+                break;
+            }
+
+            for (int i = node.index; i < node.index + 6 && i < n; i++) {
+                if (!visited[i]) {
+                    var newD = node.distance + 1;
+                    var newIndex = move[i] != -1 ? move[i] : i;
+                    queue.add(new SLNode(newIndex, newD));
+                }
+            }
+        }
     }
 
 }
@@ -513,23 +599,45 @@ class Point {
 class GraphAdjMatrix {
     int[][] g;
     int V;
+    int[] in;
+    int[] out;
 
     GraphAdjMatrix(int v) {
         this.V = v;
         g = new int[v][v];
+        in = new int[v];
+        out = new int[v];
     }
 
     GraphAdjMatrix(int[][] matrix) {
         this.V = matrix.length;
         g = matrix;
+        in = new int[this.V];
+        out = new int[this.V];
+        updateInOut();
+    }
+
+    private void updateInOut() {
+        for (int i = 0; i < g.length; i++) {
+            for (int j = 0; j < g[i].length; j++) {
+                if (g[i][j] != 0) {
+                    out[i]++;
+                    in[j]++;
+                }
+            }
+        }
     }
 
     public void addEdge(int u, int v) {
         g[u][v] = 1;
+        in[v]++;
+        out[u]++;
     }
 
     public void addEdge(int u, int v, int weight) {
         g[u][v] = weight;
+        in[v]++;
+        out[u]++;
     }
 
     public GraphAdjMatrix transpose() {
@@ -567,6 +675,29 @@ class GraphAdjMatrix {
         for (int v = 0; v < g[u].length; v++) {
             if (g[u][v] == 1 && !visited[v])
                 fillOrder(v, visited, stack);
+        }
+
+        stack.push(u);
+    }
+
+    public java.util.Stack<Integer> topoSort() {
+        var visited = new boolean[V];
+        java.util.Stack<Integer> stack = new java.util.Stack<Integer>();
+
+        for (var i = 0; i < V; i++) {
+            if (!visited[i]) {
+                topoSortHelper(i, visited, stack);
+            }
+        }
+        return stack;
+    }
+
+    private void topoSortHelper(int u, boolean[] visited, java.util.Stack<Integer> stack) {
+        visited[u] = true;
+
+        for (int v = 0; v < g[u].length; v++) {
+            if (g[u][v] == 1 && !visited[v])
+                topoSortHelper(v, visited, stack);
         }
 
         stack.push(u);
@@ -610,6 +741,66 @@ class GraphAdjMatrix {
                 System.out.println(nodes);
             }
         }
+    }
+
+    /**
+     * 
+     */
+    public boolean isStronglyConnected() {
+        var visited = new boolean[V];
+        int n = 0;
+        for (int i = 0; i < V; i++) {
+            if (out[i] > 0) {
+                n = i;
+                break;
+            }
+        }
+
+        var nodes = new ArrayList<Integer>();
+        this.dfsHelper(n, visited, nodes);
+        // If dfs could not visit any nodes
+        for (int i = 0; i < visited.length; i++) {
+            if (out[i] > 0 && !visited[i]) {
+                return false;
+            }
+        }
+
+        var graphT = this.transpose();
+        Arrays.fill(visited, false);
+
+        var nodes2 = new ArrayList<Integer>();
+        graphT.dfsHelper(n, visited, nodes2);
+
+        // if the nodes could not be visited
+        for (int i = 0; i < visited.length; i++) {
+            if (out[i] > 0 && !visited[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the graph has a eulerian circuit or not
+     * 
+     * Approach: A graph has eulerian circuit if it strongly connected and the
+     * indegree of all the nodes with positive outdegrees match
+     * 
+     * @return
+     */
+    public boolean isEulerian() {
+        if (!isStronglyConnected()) {
+            return false;
+        }
+
+        for (int i = 0; i < V; i++) {
+            if (in[i] != out[i]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -686,6 +877,41 @@ class GraphAdjMatrix {
             return (x < z) ? x : z;
         else
             return (y < z) ? y : z;
+    }
+
+    public int[][] floydWarshall() {
+        var result = new int[V][V];
+
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                if (g[i][j] == 0)
+                    result[i][j] = Integer.MAX_VALUE;
+                else
+                    result[i][j] = g[i][j];
+            }
+        }
+
+        for (int k = 0; k < V; k++) {
+            for (int i = 0; i < V; i++) {
+                for (int j = 0; j < V; j++) {
+                    if (result[i][j] > result[i][k] + result[k][j]) {
+                        result[i][j] = result[i][k] + result[k][j];
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+}
+
+class SLNode {
+    int index;
+    int distance;
+
+    SLNode(int index, int d) {
+        this.index = index;
+        this.distance = d;
     }
 }
 
