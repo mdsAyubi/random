@@ -3,8 +3,8 @@ import java.util.Arrays;
 class SolutionDP {
     public static void main(String[] args) {
         var s = new SolutionDP();
-        int coins[] = { 9, 6, 5, 1 };
-        int V = 11;
+        // int coins[] = { 9, 6, 5, 1 };
+        // int V = 11;
 
         // System.out.println(s.minCoinToMakeChange(coins, V));
         // int arr[] = { 1, 2, 3 };
@@ -38,9 +38,243 @@ class SolutionDP {
         // System.out.println(s.editDistance(str1.toCharArray(), str2.toCharArray(),
         // str1.length(), str2.length()));
 
-        int set[] = { 3, 34, 4, 12, 5, 2 };
-        int sum = 9;
-        System.out.println(s.isSubsetSum(set, sum, set.length));
+        // int set[] = { 3, 34, 4, 12, 5, 2 };
+        // int sum = 9;
+        // System.out.println(s.isSubsetSum(set, sum, set.length));
+
+        // int l = 11, p = 2, q = 3, r = 5;
+
+        // // Calling Function
+        // s.rodCutting(l, p, q, r);
+
+        // int mat[][] = { { 1, 2, 9 }, { 5, 3, 8 }, { 4, 6, 7 } };
+        // s.longestPathInGrid(mat);
+
+        // int arr[] = { 3, 1, 4, 2, 2, 1 };
+        // s.partitionWithMinSubsetSum(arr);
+
+        // System.out.println(s.waysToCoverADistanceMemoized(4));
+        // System.out.println(s.eggDrop(2, 10));
+
+        // int V[] = { 8, 15, 3, 7 };
+        // System.out.println(s.optimalStrategyInGame(V, 0, V.length - 1));
+
+        // String X = "AGGTAB";
+        // String Y = "GXTXAYB";
+
+        // System.out.println(s.shortestSuperSequence(X.toCharArray(),
+        // Y.toCharArray()));
+
+        int arr[] = { 1, 3, 6, 3, 2, 3, 6, 8, 9, 5 };
+        System.out.println(s.minJumps(arr, 0, arr.length - 1));
+    }
+
+    public int minJumps(int[] A, int l, int h) {
+        if (l == h)
+            return 0;
+
+        if (A[l] == 0)
+            return Integer.MAX_VALUE;
+
+        var min = Integer.MAX_VALUE;
+
+        for (int i = l + 1; i <= h && i <= l + A[l]; i++) {
+            var jmps = minJumps(A, i, h);
+            if (jmps != Integer.MAX_VALUE && jmps + 1 < min) {
+                min = jmps + 1;
+            }
+        }
+        return min;
+    }
+
+    /**
+     * 
+     * @param X
+     * @param Y
+     * @return
+     */
+    public int shortestSuperSequence(char[] X, char[] Y) {
+        int m = X.length;
+        int n = Y.length;
+
+        int l = lcs(X, Y, m, n);
+        return (m + n - l);
+    }
+
+    /**
+     * 
+     * @param V
+     * @param i
+     * @param j
+     * @return
+     */
+    public int optimalStrategyInGame(int[] V, int i, int j) {
+
+        if (i == j)
+            return V[i];
+        if (j == i + 1)
+            return Math.max(V[i], V[j]);
+
+        return Math.max(V[i] + Math.min(optimalStrategyInGame(V, i + 2, j), optimalStrategyInGame(V, i + 1, j - 1)),
+                V[j] + Math.min(optimalStrategyInGame(V, i + 1, j - 1), optimalStrategyInGame(V, i, j - 2)));
+
+    }
+
+    /**
+     * 
+     * @param n
+     * @param k
+     * @return
+     */
+    public int eggDrop(int n, int k) {
+
+        // For one egg,all the floors
+        if (n == 1) {
+            return k;
+        }
+
+        // For 1 or 0 floors, as many trials
+        if (k == 1 || k == 0)
+            return k;
+
+        var res = Integer.MAX_VALUE;
+        for (int i = 1; i <= k; i++) {
+            res = Math.min(res, 1 + Math.max(eggDrop(n - 1, i - 1), eggDrop(n, k - i)));
+        }
+
+        return res;
+
+    }
+
+    public int waysToCoverADistance(int dist) {
+        if (dist < 0)
+            return 0;
+
+        if (dist == 0)
+            return 1;
+
+        return waysToCoverADistance(dist - 1) + waysToCoverADistance(dist - 2) + waysToCoverADistance(dist - 3);
+    }
+
+    public int waysToCoverADistanceMemoized(int dist) {
+        var dp = new int[dist + 1];
+
+        dp[0] = 1;
+        dp[1] = 1;
+        dp[2] = 2;
+
+        for (int i = 3; i < dp.length; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+        }
+
+        return dp[dist];
+
+    }
+
+    /**
+     * 
+     * @param A
+     */
+    public void partitionWithMinSubsetSum(int[] A) {
+        var sum = Arrays.stream(A).summaryStatistics().getSum();
+
+        System.out.println(partitionWithMinSubsetSumHelper(A, A.length - 1, 0, sum));
+    }
+
+    private long partitionWithMinSubsetSumHelper(int[] A, int N, long currentSum, long totalSum) {
+        if (N == 0) {
+            return Math.abs(currentSum - (totalSum - currentSum));
+        }
+
+        return Math.min(partitionWithMinSubsetSumHelper(A, N - 1, currentSum + A[N - 1], totalSum),
+                partitionWithMinSubsetSumHelper(A, N - 1, currentSum, totalSum));
+    }
+
+    /**
+     * 
+     */
+    public void longestPathInGrid(int[][] mat) {
+        var dp = new int[mat.length][mat[0].length];
+
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[i].length; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        var result = 0;
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j < dp[i].length; j++) {
+                if (dp[i][j] == -1) {
+                    result = Math.max(result, longestPathInGridHelper(mat, dp, i, j));
+                }
+            }
+        }
+        System.out.println(result);
+    }
+
+    private int longestPathInGridHelper(int[][] mat, int[][] dp, int i, int j) {
+        if (i < 0 || i >= mat.length || j < 0 || j >= mat[0].length) {
+            return 0;
+        }
+
+        if (dp[i][j] != -1) {
+            return dp[i][j];
+        }
+
+        int x = Integer.MIN_VALUE, y = Integer.MIN_VALUE, z = Integer.MIN_VALUE, w = Integer.MIN_VALUE;
+        if (j < mat[i].length - 1 && mat[i][j + 1] == mat[i][j] + 1) {
+            x = 1 + longestPathInGridHelper(mat, dp, i, j + 1);
+        }
+
+        if (i > 0 && mat[i - 1][j] == mat[i][j] + 1) {
+            y = 1 + longestPathInGridHelper(mat, dp, i - 1, j);
+        }
+
+        if (i < mat.length - 1 && mat[i + 1][j] == mat[i][j] + 1) {
+            z = 1 + longestPathInGridHelper(mat, dp, i + 1, j);
+        }
+
+        if (j > 0 && mat[i][j - 1] == mat[i][j] + 1) {
+            w = 1 + longestPathInGridHelper(mat, dp, i, j - 1);
+        }
+
+        dp[i][j] = Math.max(x, Math.max(y, Math.max(z, Math.max(w, 1))));
+        return dp[i][j];
+    }
+
+    /**
+     * 
+     * @param l
+     * @param p
+     * @param q
+     * @param r
+     */
+    public void rodCutting(int l, int p, int q, int r) {
+        var t = new int[l + 1];
+
+        Arrays.fill(t, -1);
+
+        t[0] = 0;
+
+        for (int i = 0; i <= l; i++) {
+            if (t[i] == -1) {
+                continue;
+            }
+
+            if (i + p <= l) {
+                t[i + p] = Math.max(t[i] + 1, t[i + p]);
+            }
+
+            if (i + q <= l) {
+                t[i + q] = Math.max(t[i] + 1, t[i + q]);
+            }
+
+            if (i + r <= l) {
+                t[i + r] = Math.max(t[i] + 1, t[i + r]);
+            }
+        }
+
+        System.out.println(t[l]);
     }
 
     public boolean isSubsetSum(int[] set, int sum, int n) {
