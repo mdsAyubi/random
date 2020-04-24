@@ -226,11 +226,7 @@ public class SolutionHeap {
 
         // priority_queue 'pq' implemeted as min heap with the
         // help of 'compare' function
-        PriorityQueue<Node> pq = new PriorityQueue<>(new Comparator<Node>() {
-            public int compare(Node a, Node b) {
-                return a.data - b.data;
-            }
-        });
+        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.data - b.data);
 
         // push the head nodes of all the k lists in 'pq'
         for (int i = 0; i < k; i++)
@@ -279,10 +275,6 @@ class Heap {
     private void buildHeap(int[] arr) {
         for (int i = arr.length / 2 - 1; i >= 0; i--) {
             heapify(arr, arr.length, i);
-        }
-
-        for (int i : arr) {
-            // System.out.print(i + " ");
         }
     }
 
