@@ -88,4 +88,53 @@
 2. Elaborative rehearsal -- integrate with what you already know
 3. Store the aha moments
 4. Read what you need in the moment
-5.
+
+## Aliases
+
+```
+alias cl="clear"
+alias l="ls -latr"
+## cd to Repository
+alias cdr="cd /codemill/ayubi/projects/munshi/code/reconcilers/"
+alias cdp="cd /codemill/ayubi/projects/"
+alias cdc="cd /codemill/ayubi/projects/census/census"
+#alias eclipse="/u/ayubi/data/eclipse/eclipse/eclipse &"
+alias cdf="cd /codemill/ayubi/projects/munshi/code/reconcilers/reconciler-web/src/main/frontend"
+
+## maven ##
+alias mvnr="mvn clean install -DskipTests"
+alias mvnci="mvn clean install"
+alias mvncistr="mvn clean install -DskipTests"
+alias mvncistc="mvn clean install -Dmaven.test.skip=true"
+
+#vim
+alias v="vim"
+
+#atom
+#alias atom="/u/ayubi/tools/atom1.15/atom"
+#pycharm
+#alias pycharm="sh /u/ayubi/tools/pycharmC2017/bin/pycharm.sh"
+alias vscode="/codemill/ayubi/tools/VSCode-linux-x64/code"
+alias idea="sh /codemill/ayubi/tools/idea/bin/idea.sh"
+alias pycharm="sh /codemill/ayubi/tools/pycharm/bin/pycharm.sh"
+
+### Git alias ###
+alias gpull='echo git stash... && git stash && echo git pull... && git pull && echo git stash pop... && git stash pop'
+alias gpullpush='echo git stash... && git stash && echo git pull... && git pull && echo git push... && git push && echo git stash pop... && git stash pop'
+alias gcherrypick='set cb=`git rev-parse --abbrev-ref HEAD` && echo git stash... && git stash && echo git checkout \!:1... && git checkout \!:1 && echo git pull... && git pull && echo git cherry-pick \!:2... && git cherry-pick \!:2 && echo git push... && git push && echo git checkout $cb... && git checkout $cb && echo git stash pop... && git stash pop'
+alias gs='git status'
+alias gpl='git pull'
+alias gco='git checkout '
+alias ga='git add '
+alias gb='git branch'
+alias gc='git commit -m '
+alias gcp='git cherry-pick '
+alias gl='git log --oneline'
+alias gpu='git push'
+alias gsd='git stash;git stash drop'
+alias gsl='git stash list'
+alias gsp='git stash pop '
+alias gsa='git stash apply '
+alias gg='git gui'
+alias gsme='git log --author="ayubi" --oneline'
+```
